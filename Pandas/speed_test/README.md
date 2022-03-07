@@ -4,7 +4,7 @@
 
 >시계열 데이터를 이용한 테스트의 경우 열끼리 바로 계산하는 것이 아니라 행을 순서대로 하나하나 확인해봐야 할 경우가 있다. 그래서 판다스 최적화 관련 글을 보고 테스트를 해보았다. https://aldente0630.github.io/data-science/2018/08/05/a-beginners-guide-to-optimizing-pandas-code-for-speed.html
 >
->1만줄짜리 csv파일을 100번, 50번 for 루프 안에서 반복하여 작은 데이터로 인한 오차를 줄였다.
+>1만줄짜리 csv파일을 100번, 50번 for 루프로 반복하여 짧은 데이터로 인한 오차를 줄였다.
 
 ```
 # 100만줄 if문
