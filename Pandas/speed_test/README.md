@@ -6,24 +6,26 @@
 >그래서 판다스 최적화 관련 글을 보고 테스트를 해보았다. 
 >https://aldente0630.github.io/data-science/2018/08/05/a-beginners-guide-to-optimizing-pandas-code-for-speed.html
 >
->1만줄짜리 csv파일을 100번, 50번 for 루프로 반복하여 짧은 데이터로 인한 오차를 줄였다.
+>1만줄짜리 csv파일을 100번, 50번 for 루프로 반복하여 부족한 데이터 양으로 인한 오차를 줄였다.
 
 ```
 # 100만줄 if문
-simple_for_mil(df)  # 0:00:02.214019
-iterrows_mil(df)  # 0:00:17.859303
-itertuples_mil(df)  # 0:00:00.576001
+simple_for_mil(df)  # 0:00:02.205000
+iterrows_mil(df)  # 0:00:17.778895
+itertuples_mil(df)  # 0:00:00.565999
+dict_records_mil(df)  # 0:00:02.769001
 
 # 50만줄 전부 함수적용
-simple_for_func(df.copy())  # 0:00:03.104001
-iterrows_func(df.copy())  # 0:00:12.966031
-itertuples_func(df.copy())  # 0:00:02.060000
+simple_for_func(df.copy())  # 0:00:03.126556
+iterrows_func(df.copy())  # 0:00:12.512649
+itertuples_func(df.copy())  # 0:00:02.072110
+dict_records(df.copy())  # 0:00:03.073000
 
 t1 = datetime.datetime.now()
 for _ in range(50):
     df['고가'] = df['저가'] * 2
 t2 = datetime.datetime.now()
-print(f'열계산: {t2 - t1}')  # 0:00:00.009009
+print(f'열계산: {t2 - t1}')  # 0:00:00.009000
 ```
 
 - 결과
@@ -35,4 +37,104 @@ print(f'열계산: {t2 - t1}')  # 0:00:00.009009
   - 다행히 itertuples는 오차를 감안하더라도 단순 for문보다 빨랐다. 앞으로 단순 행 반복은 itertuples를 사용해야겠다.
     - if문 적용시 if문 내부가 한 번만 실행되었기에 for문보다 4배가량 빨랐으나
     - 모든 줄 함수적용 시에는 함수 적용이 병목이 되어 1.5배 정도의 차이밖에 없었던 것 같다.
+  - itertuples는 튜플 원소에 키값과 벨류가 함께 문자열로 표기되기에 조회가 불편하다.
+    - df.to_dict('records')를 사용하여 각 행을 딕셔너리로 받아봤다. 원하는 값을 조회하기는 편하지만 단순 for문과 속도 차이가 없었다.
   - df 자체 기능으로 열끼리 직접 계산하는 것이 가장 빠른 것은 확실하다.
+
+
+
+### 함수 원문
+
+```python
+def simple_for_mil(df):
+    t1 = datetime.datetime.now()
+    # 100만줄 테스트
+    for _ in range(50):
+        for i in range(length):
+            if df['고가'][i] == df_max:
+                # i 넣어도 되는데 df.index 사용하는 이유는
+                # 인덱스와 i가 다른 데이터를 취급할 경우를 가정하기 때문
+                df.at[df.index[i], '고가'] = 11111
+        for i in range(length):
+            if df['고가'][i] == 11111:
+                df.at[df.index[i], '고가'] = df_max
+    t2 = datetime.datetime.now()
+    print(f'단순 for문: {t2 - t1}')
+
+
+def iterrows_mil(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for idx, row in df.iterrows():
+            if row['고가'] == df_max:
+                df.at[idx, '고가'] = 11111
+        for idx, row in df.iterrows():
+            if row['고가'] == 11111:
+                df.at[idx, '고가'] = df_max
+    t2 = datetime.datetime.now()
+    print(f'iterrows: {t2 - t1}')
+
+
+def itertuples_mil(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for row in df.itertuples():
+            if row[5] == df_max:
+                df.at[row[0], '고가'] = 11111
+        for row in df.itertuples():
+            if row[5] == 11111:
+                df.at[row[0], '고가'] = df_max
+    t2 = datetime.datetime.now()
+    print(f'itertuples: {t2 - t1}')
+
+
+def dict_records_mil(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for row in df.to_dict('records'):
+            if row['고가'] == df_max:
+                df.at[row['Unnamed: 0'], '고가'] = 11111
+        for row in df.to_dict('records'):
+            if row['고가'] == 11111:
+                df.at[row['Unnamed: 0'], '고가'] = df_max
+    t2 = datetime.datetime.now()
+    print(f'dict_records: {t2 - t1}')
+
+
+def simple_for_func(df):
+    t1 = datetime.datetime.now()
+    # 50만줄 테스트
+    for _ in range(50):
+        for i in range(length):
+            df.at[df.index[i], '고가'] = df.at[df.index[i], '저가'] * 2
+    t2 = datetime.datetime.now()
+    print(f'단순 for_50만_함수적용: {t2 - t1}')
+
+
+def iterrows_func(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for idx, row in df.iterrows():
+            df.at[idx, '고가'] = row['저가'] * 2
+    t2 = datetime.datetime.now()
+    print(f'iterrows_50만_함수적용: {t2 - t1}')
+
+
+def itertuples_func(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for row in df.itertuples():
+            df.at[row[0], '고가'] = row[6] * 2
+    t2 = datetime.datetime.now()
+    print(f'itertuples_50만_함수적용: {t2 - t1}')
+
+
+def dict_records(df):
+    t1 = datetime.datetime.now()
+    for _ in range(50):
+        for row in df.to_dict('records'):
+            df.at[row['Unnamed: 0'], '고가'] = row['고가'] * 2
+    t2 = datetime.datetime.now()
+    print(f'dict_records_50만_함수적용: {t2 - t1}')
+```
+
