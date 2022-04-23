@@ -35,11 +35,11 @@ def itertuples_mil(df):
     t1 = datetime.datetime.now()
     for _ in range(50):
         for row in df.itertuples():
-            if row[5] == df_max:
-                df.at[row[0], '고가'] = 11111
+            if row.고가 == df_max:
+                df.at[row.Index, '고가'] = 11111
         for row in df.itertuples():
-            if row[5] == 11111:
-                df.at[row[0], '고가'] = df_max
+            if row.고가 == 11111:
+                df.at[row.Index, '고가'] = df_max
     t2 = datetime.datetime.now()
     print(f'itertuples: {t2 - t1}')
 
@@ -80,7 +80,7 @@ def itertuples_func(df):
     t1 = datetime.datetime.now()
     for _ in range(50):
         for row in df.itertuples():
-            df.at[row[0], '고가'] = row[6] * 2
+            df.at[row.Index, '고가'] = row.저가 * 2
     t2 = datetime.datetime.now()
     print(f'itertuples_50만_함수적용: {t2 - t1}')
 
@@ -99,16 +99,16 @@ length = len(df)  # 10000
 df_max = df['고가'].max()  # 최고가
 
 # 100만줄 if문
-simple_for_mil(df)  # 0:00:02.205000
-iterrows_mil(df)  # 0:00:17.778895
-itertuples_mil(df)  # 0:00:00.565999
-dict_records_mil(df)  # 0:00:02.769001
+# simple_for_mil(df)  # 0:00:02.254001
+# iterrows_mil(df)  # 0:00:17.854610
+itertuples_mil(df)  # 0:00:00.580000
+dict_records_mil(df)  # 0:00:02.749000
 
 # 50만줄 전부 함수적용
-simple_for_func(df.copy())  # 0:00:03.126556
-iterrows_func(df.copy())  # 0:00:12.512649
-itertuples_func(df.copy())  # 0:00:02.072110
-dict_records(df.copy())  # 0:00:03.073000
+simple_for_func(df.copy())  # 0:00:03.161000
+iterrows_func(df.copy())  # 0:00:13.193000
+itertuples_func(df.copy())  # 0:00:02.128000
+dict_records(df.copy())  # 0:00:03.132000
 
 t1 = datetime.datetime.now()
 for _ in range(50):
