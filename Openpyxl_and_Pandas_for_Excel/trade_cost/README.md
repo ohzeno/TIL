@@ -4,9 +4,9 @@
 
 1. [제작배경](#제작배경)
 
-2. [trade_check.py](#trade_check.py)
+2. [trade_check.py](#trade_check)
 
-3. [cost_check.py](#cost_check.py)
+3. [cost_check.py](#cost_check)
 
 4. [결과](#결과)
 
@@ -40,7 +40,7 @@
 
 
 
-### trade_check.py
+### trade_check
 
 ​	각 거래에 대해 수수료, 거래세, 세금이 존재한다면  비용/거래금액을 딕셔너리에 분류하여 저장했다.
 
@@ -48,7 +48,7 @@
 
 
 
-### cost_check.py
+### cost_check
 
 ​	trade_check에서 저장한 엑셀의 각 셀에는 모든 비용이 리스트로 저장되어 있다.
 
