@@ -4,11 +4,11 @@
 
 1. [제작배경](#제작배경)
 
-2. [trade_check.py](#1. trade_check.py)
+2. [trade_check.py](#trade_check.py)
 
-3. [cost_check.py](#2.-cost_check.py)
+3. [cost_check.py](#cost_check.py)
 
-4. [결과](#3.-결과)
+4. [결과](#결과)
 
 
 
@@ -38,13 +38,13 @@
 >
 >각 파일의 주석으로 대체한다.
 
-### 1. trade_check.py
+### trade_check.py
 
 ​	각 거래에 대해 수수료, 거래세, 세금이 존재한다면  비용/거래금액을 딕셔너리에 분류하여 저장했다.
 
 ​	그 후 엑셀 파일을 만들어 연도별 코스피/코스닥으로 나눠 각각 별도의 시트에 딕셔너리를 저장하였다.
 
-### 2. cost_check.py
+### cost_check.py
 
 ​	trade_check에서 저장한 엑셀의 각 셀에는 모든 비용이 리스트로 저장되어 있다.
 
@@ -52,7 +52,7 @@
 
 ​	총 비용을 반올림 후 부동 소수점으로 출력하였다.
 
-### 3. 결과
+### 결과
 
 ![result](result.png)
 
