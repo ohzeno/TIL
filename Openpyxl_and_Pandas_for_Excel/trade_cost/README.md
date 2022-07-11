@@ -4,7 +4,7 @@
 
 1. [제작배경](#제작배경)
 
-2. [trade_check.py](#1.-trade_check.py)
+2. [trade_check.py](#1. trade_check.py)
 
 3. [cost_check.py](#2.-cost_check.py)
 
