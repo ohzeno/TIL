@@ -10,4 +10,4 @@
 
 1. ### [js for문](JS/for/README.md)
 
-5. ### [비용체크_Excel, Openpyxl, Pandas](Openpyxl and Pandas for Excel/trade_cost/README.md)
+5. ### [비용체크 Excel Openpyxl Pandas](Openpyxl and Pandas for Excel/trade_cost/README.md)
