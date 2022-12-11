@@ -10,11 +10,11 @@
 
    1. #### [iterator](Python/iterator/README.md)
 
-   2. #### [sys.setrecursionlimit](Python\setrecursionlimit/README.md)
+   2. #### [sys.setrecursionlimit](Python/setrecursionlimit/README.md)
 
-   3. #### [global](Python\global/README.md)
+   3. #### [global](Python/global/README.md)
 
-   4. #### [move_file](Python\move_file/README.md)
+   4. #### [move_file](Python/move_file/README.md)
 
 4. ### [js for문](JS/for/README.md)
 
