@@ -14,7 +14,7 @@
 
    3. #### [global](Python/global/README.md)
 
-   4. #### [move_file](Python/move_file/README.md)
+   4. #### [move_file_and_folder](Python/move_file_and_folder/README.md)
 
 4. ### [js for문](JS/for/README.md)
 
