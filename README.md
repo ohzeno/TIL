@@ -16,6 +16,10 @@
 
    4. #### [move_file_and_folder](Python/move_file_and_folder/README.md)
 
+   5. #### [rename_file](Python/rename_file/README.md)
+
+   6. #### [Query Conversion](Python/Query Conversion/Query Conversion.md)
+
 4. ### [js for문](JS/for/README.md)
 
 5. ### [비용체크 Excel Openpyxl Pandas](Openpyxl_and_Pandas_for_Excel/trade_cost/README.md)
