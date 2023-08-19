@@ -72,7 +72,6 @@ const App = () => {
 
   const onDelete = useCallback((targetId) => {
     dispatch({ type: "DELETE", targetId });
-    // setData((data) => data.filter((item) => item.id !== targetId));
   }, []);
 
   const onEdit = useCallback((targetId, newContent) => {

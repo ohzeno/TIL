@@ -7,15 +7,11 @@ import New from "./pages/New";
 import Edit from "./pages/Edit";
 import Diary from "./pages/Diary";
 
-const url = "https://jsonplaceholder.typicode.com/comments?_limit=10";
-
 const reducer = (state, action) => {
   let newState = [];
   switch (action.type) {
     case "INIT":
-      // 강의에서는 여기서 저장을 안해준다. 그러면 초기 값이 스토리지에 저장되지 않음.
-      // 다만 이러면 getData랑 겹친다. 나중에 최적화 해야함.
-      localStorage.setItem("diary", JSON.stringify(action.data));
+      // init은 로컬스토리지에 데이터가 있는 경우에만 실행되기 때문에 굳이 또 저장해줄 필요 없다.
       return action.data;
     case "CREATE":
       newState = [action.data, ...state];
@@ -47,31 +43,13 @@ function App() {
       const diaryList = JSON.parse(localData).sort(
         (a, b) => parseInt(b.id) - parseInt(a.id)
       );
+      if (diaryList.length === 0) return;
       dataId.current = diaryList[0].id + 1;
       dispatch({ type: "INIT", data: diaryList });
     }
   }, []);
 
   const dataId = useRef(0);
-
-  const getData = async () => {
-    const response = await fetch(url).then((res) => res.json());
-    let initDate = new Date().getTime();
-    const initData = response.map((item) => {
-      return {
-        author: item.email,
-        content: item.body,
-        emotion: Math.floor(Math.random() * 5) + 1,
-        created_date: initDate++,
-        id: dataId.current++,
-      };
-    });
-    dispatch({ type: "INIT", data: initData });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const onCreate = (date, content, emotion) => {
     dispatch({

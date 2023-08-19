@@ -18,10 +18,6 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const [date, setDate] = useState(getStringDate(new Date())); // edit이면 useEffect에서 알아서 바꿔주니까 걍 new Date() 써도 됨
   const { onCreate, onEdit, onDelete } = useContext(DiaryDispatchContext);
 
-  const handleClickEmote = (emotion_id) => {
-    setEmotion(emotion_id);
-  };
-
   const handleSubmit = () => {
     if (content.length === 0) {
       contentRef.current.focus();
@@ -33,9 +29,10 @@ const DiaryEditor = ({ isEdit, originData }) => {
       )
     ) {
       if (isEdit) {
-        onEdit(originData.id, date, content, emotion);
+        // 강의에서는 date를 넘겨주나, 그러면 일자까지만 있어서 현재 작성한 일기는 당일 초에 작성한 것이 된다.
+        onEdit(originData.id, originData.created_date, content, emotion);
       } else {
-        onCreate(new Date(), content, emotion); // 강의에서는 date를 넘겨주는데, date는 일자까지만 있어서 현재 작성한 일기는 당일 초에 작성한 것이 된다.
+        onCreate(new Date(), content, emotion); // 마찬가지로 강의에서는 date를 넘겨줌.
       }
       navigate("/", { replace: true });
     }
@@ -59,20 +56,11 @@ const DiaryEditor = ({ isEdit, originData }) => {
     <div className="DiaryEditor">
       <MyHeader
         headText={isEdit ? "일기 수정하기" : "새 일기 작성"}
-        leftChild={
-          <MyButton
-            text="< 뒤로가기"
-            onClick={() => navigate(-1)}
-            rightChild={
-              isEdit && (
-                <MyButton
-                  text="삭제하기"
-                  type="negative"
-                  onClick={handleDelete}
-                />
-              )
-            }
-          />
+        leftChild={<MyButton text="< 뒤로가기" onClick={() => navigate(-1)} />}
+        rightChild={
+          isEdit && (
+            <MyButton text="삭제하기" type="negative" onClick={handleDelete} />
+          )
         }
       />
       <div>
@@ -94,7 +82,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
               <EmotionItem
                 key={item.emotion_id}
                 {...item}
-                onClick={handleClickEmote}
+                onClick={setEmotion} // 강의에서는 다른 함수로 감싸서 useCallback으로 보내주는데, 로직이 setEmotion밖에 없어서 그냥 보내주고 React.memo 쓰는거랑 차이가 없음.
                 isSelected={item.emotion_id === emotion}
               />
             ))}
