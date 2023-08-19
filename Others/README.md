@@ -18,7 +18,7 @@
 
    5. #### [rename_file](Python/rename_file/README.md)
 
-   6. #### [Query Conversion](Python/Query Conversion/README.md)
+   6. #### [Query Conversion](Python/Query_Conversion/README.md)
 
    7. [gist_to_git](Python/gist_to_git/README.md)
 
