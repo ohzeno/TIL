@@ -16,8 +16,8 @@ const reducer = (state, action) => {
     case "CREATE":
       newState = [action.data, ...state];
       break;
-    case "REMOVE":
-      newState = state.filter((item) => item.id !== action.data.id);
+    case "DELETE":
+      newState = state.filter((item) => item.id !== action.targetId);
       break;
     case "EDIT":
       newState = state.map((item) =>
@@ -64,7 +64,7 @@ function App() {
   };
 
   const onDelete = (targetId) => {
-    dispatch({ type: "REMOVE", targetId });
+    dispatch({ type: "DELETE", targetId });
   };
 
   const onEdit = (targetId, date, content, emotion) => {
