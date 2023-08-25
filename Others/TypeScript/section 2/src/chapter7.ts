@@ -33,7 +33,7 @@ function func2(): never {
   throw new Error();
 }
 
-// never타입은 모든 타입에 할당 가능하지만 어떤 타입도 never에 할당할 수 없다.
+// never타입은 모든 타입에 할당 가능한 하위 타입. 하지만 어떤 타입도 never에 할당할 수 있거나 하위 타입이 아님.
 // strictNullChecks가 false여도 할당 불가.any타입 변수도 할당 불가.
 let b: never;
 // b = 1;
