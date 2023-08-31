@@ -2,14 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  HttpException,
-  HttpStatus,
   UseFilters,
-  Param,
-  ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
@@ -23,35 +16,27 @@ export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
   @Get()
-  getAllCats() {
-    // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // throw new HttpException({ success: false, message: 'test' }, 401);
-    return 'all cats';
-  }
-
-  @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe) id: number) {
-    console.log(id, typeof id);
-    return 'one cat';
+  getCurrentCat() {
+    return 'current cat';
   }
 
   @Post()
-  createCat() {
-    return 'create cat';
+  async signUp() {
+    return 'sign up';
   }
 
-  @Put(':id')
-  updateCat() {
-    return 'update cat';
+  @Post('login')
+  logIn() {
+    return 'log in';
   }
 
-  @Patch(':id')
-  updatePartialCat() {
-    return 'update partial cat';
+  @Post('logout')
+  logOut() {
+    return 'log out';
   }
 
-  @Delete(':id')
-  deleteCat() {
-    return 'delete cat';
+  @Post('upload/cats')
+  uploadCatImg() {
+    return 'uploadImg';
   }
 }
