@@ -1,21 +1,16 @@
+import { CatsRepository } from './cats.repository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CatRequestDto } from './dto/cats.request.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Cat } from './cats.schema';
-import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CatsService {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  // db에 직접 접근하지 않고 repository 패턴을 사용한다.
+  constructor(private readonly catsRepository: CatsRepository) {}
 
   async signUp(body: CatRequestDto) {
     const { email, name, password } = body;
-    /* 
-    강의에서는 Promise<boolean>을 반환했지만 그건 mongoose 5버전까지고 6부터는 존재하면 document를 반환, 존재하지 않으면 null을 반환한다.
-    나는 코드 작성 시점에서 7버전을 사용중.
-    */
-    const isCatExist = await this.catModel.exists({ email });
+    const isCatExist = await this.catsRepository.existsByEmail(email);
     // 강의에서는 UnauthorizedException(403)을 사용했지만 나는 conflict가 더 적합하다고 생각해서 409를 사용했다.
     if (isCatExist) {
       throw new HttpException(
@@ -25,7 +20,7 @@ export class CatsService {
     }
     // 10회 솔트 생성.
     const hashedPassword = await bcrypt.hash(password, 10);
-    const cat = await this.catModel.create({
+    const cat = await this.catsRepository.create({
       email,
       name,
       password: hashedPassword,
