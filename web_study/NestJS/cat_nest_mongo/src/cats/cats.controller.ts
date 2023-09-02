@@ -24,9 +24,7 @@ export class CatsController {
 
   @Post()
   async signUp(@Body() body: CatRequestDto) {
-    // dto로 유효성검사
-    console.log(body);
-    return 'sign up';
+    return this.catsService.signUp(body);
   }
 
   @Post('login')
