@@ -88,6 +88,14 @@ export class CatsModule {}
 
 app쪽에서 providers에 하위 모듈 공급자를 등록하지 말고 하위 모듈쪽에서 export에 등록하는 것이 중복을 줄여 단일성의 원칙에 맞다. 모듈의 exports에는 그 모듈에서 만든 서비스를 등록하는 것이 좋음.
 
+### 순환 참조 해결
+
+auth.module.ts: `imports: [forwardRef(() => CatsModule)]`
+
+cats.module.ts: `imports: [forwardRef(() => AuthModule)]`
+
+양쪽 모듈에서 서로 import할 때 순환 종속성 해결을 위한 함수.
+
 
 
 ## Middleware
@@ -458,6 +466,14 @@ hash함수의 두번째 인자는 saltOrRounds인데 암호학 용어다. 솔트
 
 
 ### JWT
+
+헤더, 페이로드, 시그니처로 구성된다.
+
+Header: 토큰의 유형과 해시 암호화 알고리즘을 포함
+
+Payload: 실제 전송할 데이터를 포함. 일반적으로 사용자 ID, 유효 기간 등의 정보를 담고 있음.
+
+Signature: 헤더와 페이로드를 암호화한 결과물. 서버와 클라이언트 사이에 데이터가 변조되지 않았음을 증명하는 역할.
 
 `npm install --save @nestjs/passport passport`
 

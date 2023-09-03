@@ -14,6 +14,12 @@ export class CatsRepository {
   */
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+    // 패스워드 제거
+    const cat = await this.catModel.findById(catId).select('-password');
+    return cat;
+  }
+
   async existsByEmail(email: string): Promise<boolean> {
     const result = await this.catModel.exists({ email });
     /* 

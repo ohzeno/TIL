@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   UseFilters,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
@@ -13,6 +14,9 @@ import { CatRequestDto } from './dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Cat } from './cats.schema';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -24,9 +28,10 @@ export class CatsController {
   ) {}
 
   @ApiOperation({ summary: '현재 고양이 가져오기' })
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getCurrentCat() {
-    return 'current cat';
+  getCurrentCat(@CurrentUser() cat: Cat) {
+    return cat.readOnlyData;
   }
 
   @ApiResponse({
@@ -50,11 +55,12 @@ export class CatsController {
     return this.authService.jwtLogIn(data);
   }
 
-  @ApiOperation({ summary: '로그아웃' })
-  @Post('logout')
-  logOut() {
-    return 'log out';
-  }
+  // 세션 false라서(stateless) jwt를 프론트에서 삭제하면 로그아웃이 되므로 logout 로직은 필요없다.
+  // @ApiOperation({ summary: '로그아웃' })
+  // @Post('logout')
+  // logOut() {
+  //   return 'log out';
+  // }
 
   @ApiOperation({ summary: '고양이 이미지 업로드' })
   @Post('upload/cats')
