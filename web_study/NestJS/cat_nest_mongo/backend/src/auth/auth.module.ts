@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     // 많은 인증 전략을 제공하는 passport 모듈을 사용한다.
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.register({
-      secret: 'secretKey',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1y' },
     }),
 
