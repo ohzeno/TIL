@@ -2,8 +2,18 @@
 
 기타 학습기록.
 
-web과 직접적으로 관련된 부분은 web_study에 넣고
+대략적인 폴더구조
 
-다른 부분은 Others에 넣어둠.
+- TIL
+  - Others
+    - JS
+    - Openpyxl_and_Pandas_for_Excel
+    - Pandas
+    - Python
+    - Selenium
+    - TypsScript
+  - web_study
+    - NestJS
+    - ReactJS
+    - express
 
-상세는 각 폴더 리드미에.
