@@ -1,12 +1,26 @@
-import { CatsRepository } from './cats.repository';
+import { CatsRepository } from '../cats.repository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CatRequestDto } from './dto/cats.request.dto';
+import { CatRequestDto } from '../dto/cats.request.dto';
 import * as bcrypt from 'bcrypt';
+import { Cat } from '../cats.schema';
 
 @Injectable()
 export class CatsService {
   // db에 직접 접근하지 않고 repository 패턴을 사용한다.
   constructor(private readonly catsRepository: CatsRepository) {}
+
+  async uploadImg(cat: Cat, files: Express.Multer.File[]) {
+    const fileName = `cats/${files[0].filename}`;
+
+    console.log(fileName);
+
+    const newCat = await this.catsRepository.findByIdAndUpdateImg(
+      cat.id,
+      fileName,
+    );
+    console.log(newCat);
+    return newCat;
+  }
 
   async signUp(body: CatRequestDto) {
     const { email, name, password } = body;

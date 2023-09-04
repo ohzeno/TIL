@@ -14,6 +14,14 @@ export class CatsRepository {
   */
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findByIdAndUpdateImg(id: string, fileName: string) {
+    const cat = await this.catModel.findById(id);
+    cat.imgUrl = `http://localhost:${process.env.PORT}/media/${fileName}`;
+    const newCat = await cat.save();
+    console.log(newCat);
+    return newCat.readOnlyData;
+  }
+
   async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
     // 패스워드 제거
     const cat = await this.catModel.findById(catId).select('-password');
