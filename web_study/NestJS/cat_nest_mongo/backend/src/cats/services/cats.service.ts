@@ -9,6 +9,12 @@ export class CatsService {
   // db에 직접 접근하지 않고 repository 패턴을 사용한다.
   constructor(private readonly catsRepository: CatsRepository) {}
 
+  async getAllCats() {
+    const allCats = await this.catsRepository.findAll();
+    const readOnlyCats = allCats.map((cat) => cat.readOnlyData);
+    return readOnlyCats;
+  }
+
   async uploadImg(cat: Cat, files: Express.Multer.File[]) {
     const fileName = `cats/${files[0].filename}`;
 

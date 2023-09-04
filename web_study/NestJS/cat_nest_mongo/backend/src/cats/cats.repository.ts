@@ -14,6 +14,10 @@ export class CatsRepository {
   */
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findAll() {
+    return await this.catModel.find();
+  }
+
   async findByIdAndUpdateImg(id: string, fileName: string) {
     const cat = await this.catModel.findById(id);
     cat.imgUrl = `http://localhost:${process.env.PORT}/media/${fileName}`;
