@@ -36,7 +36,7 @@ export class Comment extends Document {
     description: 'like count',
   })
   @Prop({
-    dafault: 0,
+    default: 0,
   })
   @IsPositive()
   likeCount: number;
@@ -51,7 +51,7 @@ export class Comment extends Document {
     ref: 'cats',
   })
   @IsNotEmpty()
-  info: Types.ObjectId;
+  targetId: Types.ObjectId; // target
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

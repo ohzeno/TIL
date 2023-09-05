@@ -6,6 +6,7 @@ import { Cat, CatSchema } from './cats.schema';
 import { CatsRepository } from './cats.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { Comment, CommentSchema } from 'src/comments/comments.schema';
 
 @Module({
   // 쿼리를 사용하려면 스키마가 필요. 스키마를 사용하기 위해 등록
@@ -13,7 +14,10 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './upload', // 저장할 경로
     }),
-    MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
+    MongooseModule.forFeature([
+      { name: Comment.name, schema: CommentSchema },
+      { name: Cat.name, schema: CatSchema },
+    ]),
     forwardRef(() => AuthModule),
   ],
   controllers: [CatsController],
