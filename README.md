@@ -16,4 +16,5 @@
     - NestJS
     - ReactJS
     - express
+    - MongoDB
 

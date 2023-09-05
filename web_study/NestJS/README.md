@@ -210,7 +210,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 }  // 공식문서 코드
 ```
 
-위 핉터를 여러 방법으로 사용할 수 있다.
+위 필터를 여러 방법으로 사용할 수 있다.
 
 ```tsx
 ----cats.controller.ts
@@ -338,75 +338,6 @@ url 파라미터는 string으로 들어오는데, 이를 자동으로 변환해�
 
 
 
-## mongoose
-
-```tsx
-import * as mongoose from 'mongoose';
-import { ConfigModule } from '@nestjs/config';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot(),
-    CatsModule,
-    MongooseModule.forRoot(process.env.MONGODB_URI),  // db 연결 uri
-  ],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule implements NestModule {
-  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-    mongoose.set('debug', this.isDev);  // 개발때 쿼리 로깅
-  }
-}
-```
-
-
-
-### 스키마
-
-`npm i --save class-validator class-transformer`
-
-유효성 검사 패키지 받아줌.
-
-```tsx
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { Document, SchemaOptions } from 'mongoose';
-
-const options: SchemaOptions = {
-  timestamps: true,
-};
-
-@Schema(options)
-export class Cat extends Document {
-  @Prop({
-    required: true,
-    unique: true,
-  })
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-}
-
-export const CatSchema = SchemaFactory.createForClass(Cat);  // 스키마 생성
-```
-
-밸리데이션 데코레이터 작성 이후 main.ts에 등록
-
-```tsx
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new HttpExceptionFilter());
-  const PORT = process.env.PORT;
-  await app.listen(PORT);
-}
-```
-
-
-
 ## DTO(Data Transfer Object)
 
 계층 간 데이터 전달을 위한 오브젝트.
@@ -435,12 +366,6 @@ export class CatRequestDto {
     return 'sign up';
   }
 ```
-
-
-
-## 쿼리
-
-`Model.exists({ email })` 해당 email이 존재하면 document, 없으면 null을 반환. promise니까 await 사용.
 
 
 
@@ -493,3 +418,15 @@ Signature: 헤더와 페이로드를 암호화한 결과물. 서버와 클라이
 
 예전에는 express, swagger에 따라 설치방법이 달랐는데 지금은 통합됐다.
 프로젝트와 [공식문서](https://docs.nestjs.com/openapi/introduction) 참고
+
+
+
+### swagger 보안
+
+`npm install express-basic-auth`
+
+
+
+## 파일 업로드
+
+`npm i -D @types/multer`
