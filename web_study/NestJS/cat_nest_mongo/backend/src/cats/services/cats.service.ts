@@ -1,6 +1,6 @@
 import { CatsRepository } from '../cats.repository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CatRequestDto } from '../dto/cats.request.dto';
+import { CatRequestDto } from '../dtos/cats.request.dto';
 import * as bcrypt from 'bcrypt';
 import { Cat } from '../cats.schema';
 
