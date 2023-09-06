@@ -13,8 +13,8 @@
     - Selenium
     - TypsScript
   - web_study
+    - MongoDB
     - NestJS
     - ReactJS
     - express
-    - MongoDB
 
