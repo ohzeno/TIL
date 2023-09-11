@@ -34,6 +34,8 @@ git폴더로 관리하지 않길 원한다면(상위폴더가 git폴더라던가
 
 `nest g middleware 미들웨어_이름`
 
+`nest g ga 게이트웨이_이름`
+
 
 
 ## Controller
@@ -440,3 +442,11 @@ Signature: 헤더와 페이로드를 암호화한 결과물. 서버와 클라이
 ## 파일 업로드
 
 `npm i -D @types/multer`
+
+
+
+## 소켓 프로그래밍
+
+[공식문서](https://docs.nestjs.com/websockets/gateways)
+
+`npm i --save @nestjs/websockets @nestjs/platform-socket.io`
