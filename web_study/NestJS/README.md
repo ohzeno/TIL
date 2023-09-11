@@ -10,6 +10,16 @@ git폴더로 관리하지 않길 원한다면(상위폴더가 git폴더라던가
 
 `nest new 프로젝트_이름 —skip-git` 을 사용한다.
 
+단, 이럴 경우 .gitignore가 생성되지 않으니 주의
+
+
+
+### SSR
+
+[공식문서](https://docs.nestjs.com/techniques/mvc)
+
+`npm install —save hbs` 템플릿 엔진 설치
+
 
 
 ## CLI

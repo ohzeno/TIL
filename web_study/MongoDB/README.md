@@ -60,6 +60,8 @@
 
 ## with NestJS
 
+`npm i @nestjs/mongoose mongoose`
+
 ```tsx
 import * as mongoose from 'mongoose';
 import { ConfigModule } from '@nestjs/config';
