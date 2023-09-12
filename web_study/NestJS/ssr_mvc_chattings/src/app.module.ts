@@ -2,7 +2,6 @@ import { Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { ChatsGateway } from './chats/chats.gateway';
 import { ChatsModule } from './chats/chats.module';
 import * as mongoose from 'mongoose';
 
@@ -15,7 +14,7 @@ import * as mongoose from 'mongoose';
     ChatsModule,
   ],
   controllers: [AppController],
-  providers: [ChatsGateway],
+  providers: [],
 })
 export class AppModule implements NestModule {
   private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
