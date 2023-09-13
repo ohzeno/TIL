@@ -5,6 +5,11 @@ export class AppController {
   @Get()
   @Render('index') // index.html로 전달
   root() {
-    return { message: 'Hello world!!!' };
+    return {
+      data: {
+        title: 'Zeno_Chattings',
+        copyright: 'zeno oh',
+      },
+    };
   }
 }

@@ -489,3 +489,21 @@ export class ChatsGateway
 }
 ```
 
+
+
+### Broadcasting
+
+```tsx
+@SubscribeMessage('new_user')
+  handleNewUser(
+    @MessageBody() username: string,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    // broadcast: 자신을 제외한 연결된 모든 클라이언트에게 메시지를 보낸다.
+    // 클라이언트 측에서 user_connected 이벤트에 대한 리스너를 등록해야 한다.
+    socket.broadcast.emit('user_connected', username);
+    return username;
+  }
+```
+
+js로 net을 이용해 채팅서버를 통째로 구현했을 때는 채팅방의 남은 클라이언트들을 저장해둔 배열에 대해 forEach로 순회돌면서 this.clients[address].write 해줬었는데 Socket에 broadcast라는 편리한 메서드가 있어서 좋았다.

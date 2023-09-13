@@ -44,6 +44,9 @@ export class ChatsGateway
     @MessageBody() username: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log(username);
+    // broadcast: 자신을 제외한 연결된 모든 클라이언트에게 메시지를 보낸다.
+    // 클라이언트 측에서 user_connected 이벤트에 대한 리스너를 등록해야 한다.
+    socket.broadcast.emit('user_connected', username);
+    return username;
   }
 }
