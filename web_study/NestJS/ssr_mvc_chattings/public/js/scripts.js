@@ -1,4 +1,4 @@
-const socket = io('/');
+const socket = io('/chattings'); // namespace: chattings에 연결
 
 const getElementById = (id) => document.getElementById(id) || null;
 
