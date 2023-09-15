@@ -26,17 +26,31 @@ const handleSubmit = (event) => {
   const inputTxt = event.target.elements[0].value;
   if (!inputTxt) return;
   socket.emit('submit_chat', inputTxt);
-  drawNewChat(`me: ${inputTxt}`);
+  drawNewChat(`${inputTxt}`, true);
   event.target.elements[0].value = '';
 };
 
 const drawHelloStranger = (username) =>
   (helloStrangerElement.innerText = `Hello ${username} :)`);
 
-const drawNewChat = (message) => {
-  const singleChatBox = document.createElement('div');
-  singleChatBox.innerHTML = `${message}`;
-  chattingBoxElement.append(singleChatBox);
+const drawNewChat = (message, isMe = false) => {
+  const wrapperChatBox = document.createElement('div');
+  wrapperChatBox.className = 'clearfix';
+  let chatBox;
+  if (!isMe)
+    chatBox = `
+      <div class='bg-gray-300 w-3/4 mx-4 my-2 p-2 rounded-lg clearfix break-all'>
+        ${message}
+      </div>
+    `;
+  else
+    chatBox = `
+      <div class='bg-white w-3/4 ml-auto mr-4 my-2 p-2 rounded-lg clearfix break-all'>
+        ${message}
+      </div>
+    `;
+  wrapperChatBox.innerHTML = chatBox;
+  chattingBoxElement.append(wrapperChatBox);
 };
 
 function helloUser() {
