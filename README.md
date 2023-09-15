@@ -5,16 +5,16 @@
 대략적인 폴더구조
 
 - TIL
-  - Others
+  - [Others](Others/README.md)
     - JS
     - Openpyxl_and_Pandas_for_Excel
     - Pandas
     - Python
     - Selenium
-    - TypsScript
+    - [TypeScript](Others/TypeScript/README.md)
   - web_study
-    - MongoDB
-    - NestJS
-    - ReactJS
-    - express
+    - [MongoDB](web_study/MongoDB/README.md)
+    - [NestJS](web_study/NestJS/README.md)
+    - [ReactJS](web_study/ReactJS/README.md)
+    - [express](web_study/express/README.md)
 
