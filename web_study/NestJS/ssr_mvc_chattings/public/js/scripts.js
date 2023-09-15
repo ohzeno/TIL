@@ -17,12 +17,16 @@ socket.on('new_chat', (data) => {
   drawNewChat(`${username}: ${chat}`);
 });
 
+socket.on('user_disconnected', (username) =>
+  drawNewChat(`${username}이(가) 나갔습니다.`),
+);
+
 const handleSubmit = (event) => {
   event.preventDefault(); // submit 이벤트의 기본 동작인 새로고침을 막음
   const inputTxt = event.target.elements[0].value;
   if (!inputTxt) return;
-  socket.emit('send_message', inputTxt);
-  drawNewChat(inputTxt);
+  socket.emit('submit_chat', inputTxt);
+  drawNewChat(`me: ${inputTxt}`);
   event.target.elements[0].value = '';
 };
 
