@@ -71,13 +71,14 @@ export class ChatsGateway
     @MessageBody() username: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    const isUserExist = this.userSocket.exists({ username });
+    const isUserExist = await this.userSocket.exists({ username });
     /* 
     강의에서는 Math.floor(Math.random() * 100)을 붙여주는데,
     서비스 초기에는 괜찮을지 모르지만 규모가 커지면 수정해야 한다.
     그냥 처음부터 안전하게 uuid를 붙여주는게 낫다.
     */
     if (isUserExist) username = `${username}_${uuidv4()}`;
+
     await this.userSocket.create({
       socketid: socket.id,
       username,
@@ -88,13 +89,19 @@ export class ChatsGateway
     return username;
   }
 
-  @SubscribeMessage('send_message')
-  handleSubmitChat(
+  @SubscribeMessage('submit_chat')
+  async handleSubmitChat(
     @MessageBody() chat: string,
     @ConnectedSocket() socket: Socket,
   ) {
+    const socketObj = await this.userSocket.findOne({ socketid: socket.id });
+    await this.chatModel.create({
+      user: socketObj,
+      chat,
+    });
+
     socket.broadcast.emit('new_chat', {
-      username: socket.id,
+      username: socketObj.username,
       chat,
     });
   }
