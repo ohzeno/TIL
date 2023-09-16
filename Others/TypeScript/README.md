@@ -1,6 +1,10 @@
 # TypeScript
 
-# 환경설정
+[최상위 폴더](../../README.md)
+
+[TOC]
+
+## 환경설정
 
 폴더 `npm init -y` 후 `npm i @types/node`
 
@@ -18,7 +22,7 @@ ts-node 설치 안돼있으면 `npm install ts-node -g`
 
 `ts-node xxx.ts`
 
-## 컴파일러 설정
+### 컴파일러 설정
 
 `tsc  -init`
 

@@ -1,5 +1,7 @@
 # README
 
+[최상위 폴더](../README.md)
+
 ## 목차
 
 1. ### [셀레늄](Selenium/LoginBot/README.md)
@@ -25,6 +27,8 @@
 4. ### [js for문](JS/for/README.md)
 
 5. ### [비용체크 Excel Openpyxl Pandas](Openpyxl_and_Pandas_for_Excel/trade_cost/README.md)
+
+6. [TypeScript](TypeScript/README.md)
 
    
 
