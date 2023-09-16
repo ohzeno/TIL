@@ -1,5 +1,11 @@
 # MongoDB
 
+[최상위 폴더](../../README.md)
+
+[TOC]
+
+
+
 ## Compass 명령어
 
 ### **데이터베이스 관련:**
@@ -58,7 +64,7 @@
 
 ## Mongoose
 
-## with NestJS
+### with NestJS
 
 `npm i @nestjs/mongoose mongoose`
 
@@ -86,7 +92,7 @@ export class AppModule implements NestModule {
 
 
 
-### 스키마
+#### 스키마
 
 `npm i --save class-validator class-transformer`
 
@@ -129,13 +135,72 @@ async function bootstrap() {
 
 
 
-### 쿼리
+#### 쿼리
+
+CRUD 각각에 많은 메서드가 있지만 직접 사용해본 메서드만 기록한다. 어차피 공식문서 찾아보면서 개발하게 될테니.
+
+##### 생성
+
+```tsx
+await this.userSocket.create({
+  socketid: socket.id,
+  username,
+});
+```
+
+model.create로 사용한다.
+
+
+
+##### 읽기
+
+```tsx
+const user = await this.userSocket.findOne({
+  socketid: socket.id,
+});
+```
+
+model.findOne의 반환값은 해당 내용이 존재하면 다큐멘트를, 없으면 null을 반환한다.
 
 `Model.exists({ email })` 해당 email이 존재하면 document, 없으면 null을 반환. promise니까 await 사용.
 
 
 
-### populate
+##### 수정
+
+document.updateOne, document.save 등이 있다.
+
+```tsx
+const cat = await this.catModel.findById(id);
+cat.imgUrl = http://localhost:${process.env.PORT}/media/${fileName};
+const newCat = await cat.save();
+```
+
+
+
+##### 삭제
+
+`await this.userSocket.deleteOne({ socketid: [socket.id](http://socket.id/) });`
+
+위 처럼 model에서 찾아서 삭제할 수 있다.
+
+- 이미 찾은 document에 대해
+
+  `await user.deleteOne();`
+
+  강의에서는 delete를 사용했고 검색해보면 remove를 사용했다는데
+  공식문서를 찾아봐도 보이지 않고, delete, remove를 넣어봐도 document에 그런 메서드 없다고 에러가 났다.
+  `await this.userSocket.deleteOne({ socketid: [socket.id](http://socket.id/) });`
+  model에서 직접 deleteOne하려니, 이미 찾은 유저를 또 deleteOne으로 탐색한다는 것이 굉장히 비효율적이라고 느껴졌다(findOndeAndDelete라는 메서드가 있는데 써보진 않았다.).
+  mongoose가 기본적인 crud에서 그렇게 허술하게 설계됐을지 의문이 들었다.
+  그래서 Document에 직접 들어가서 찾아보니 deleteOne이 있고, 여기에 설명으로 다음과 같이 적혀있다.
+  `/* Removes this document from the db. */
+  deleteOne(options?: QueryOptions): Promise<this>;`
+  model.deleteOne과 별개로 document 자체에서 자신을 삭제할 수 있는 메서드.
+
+
+
+#### populate
 
 [공식문서](https://mongoosejs.com/docs/populate.html)
 
@@ -242,3 +307,11 @@ for cat in cats:
 ```
 
 같은 작업이 일어난다. 물론 populate는 내부적으로 최적화되어 있기에 위처럼 2중for문같은 작업이 이루어지진 않는다(find가 comments의 모든 레코드를 살핀다고 가정한다는 의미. O(n^2)). 어쨌든 각 cat의 localField와 일치하는 comments를 모두 찾아야 하므로 연산이 그다지 효율적이진 않을 듯 하다.
+
+
+
+#### AWS S3 연결
+
+npm i -D @types/multer
+
+npm i aws-sdk @nestjs/config
