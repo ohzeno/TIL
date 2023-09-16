@@ -4,6 +4,8 @@
 
 [TOC]
 
+> 문법은 분량이 너무 많아서 리드미에 기록하지 않음. 복습할 때는 ts파일들과 [공식문서](https://www.typescriptlang.org/ko/docs/handbook/typescript-from-scratch.html) 볼 것
+
 ## 환경설정
 
 폴더 `npm init -y` 후 `npm i @types/node`

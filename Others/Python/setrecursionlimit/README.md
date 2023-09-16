@@ -1,5 +1,7 @@
 ## sys.setrecursionlimit
 
+[최상위 폴더](../../../README.md)
+
 ```python
 import sys
 sys.setrecursionlimit(5 + 4)

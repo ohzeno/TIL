@@ -1,5 +1,7 @@
 ## Iterator
 
+[최상위 폴더](../../../README.md)
+
 ```python
 datas = [10, 20, 30]
 datas2 = map(int, '10 20 30'.split())
