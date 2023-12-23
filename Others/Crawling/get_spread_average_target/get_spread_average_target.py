@@ -115,7 +115,7 @@ def get_code_link(code: str) -> str | None:
     """
     # 검색페이지
     url = f"{BASE_URL}/search/?q={code}"
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     # 응답 코드가 200이 아니면 None 반환
     if not check_status_code(response, code):
         return None
@@ -183,7 +183,7 @@ def get_spread_average(code: str) -> str | None:
             return None
     while True:
         url = f"{BASE_URL}/quote/stock/{stock_d[code]}/consensus/"
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         if check_status_code(response, code):  # 데이터 받아오기 성공하면 파싱으로.
             break
         if response.status_code == 302:
@@ -204,6 +204,9 @@ def get_spread_average(code: str) -> str | None:
 
 
 code = "NVDA"
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+}
 data = get_spread_average(code)
 if data:
     print(f"{code} Spread / Average Target: {data}")
