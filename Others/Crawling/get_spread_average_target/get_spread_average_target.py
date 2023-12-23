@@ -206,7 +206,7 @@ def get_spread_average(code: str) -> str | None:
 code = "NVDA"
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-}
+}  # 403 에러 방지용 헤더 추가
 data = get_spread_average(code)
 if data:
     print(f"{code} Spread / Average Target: {data}")
