@@ -201,7 +201,9 @@ const App = () => {
 
 
 
-## Context - 컴포넌트 트리에 데이터 공급하기
+# State Management
+
+## Context
 
 ```jsx
 import React from "react"
@@ -222,3 +224,8 @@ const { onCreate } = useContext(DiaryDispatchContext);
 ```
 
 컨텍스트 하위의 컴포넌트들은 컨텍스트들을 통해 데이터를 공유할 수 있다. Vuex 비슷함.
+
+
+
+## Recoil
+
