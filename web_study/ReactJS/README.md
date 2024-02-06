@@ -229,3 +229,68 @@ const { onCreate } = useContext(DiaryDispatchContext);
 
 ## Recoil
 
+### RecoilRoot
+
+```jsx
+import { RecoilRoot } from "recoil";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
+  </React.StrictMode>
+);
+```
+
+App을 RecoilRoot로 감싼다. 위처럼 index.js에서 해도 되고 App.js에서 해도 된다.
+
+
+
+### Atom
+
+```jsx
+import { atom } from "recoil";
+
+export const todoListState = atom({
+  key: "todoListState",
+  default: [],
+});
+```
+
+atoms.js를 만들어서 값을 만든다. atom값을 읽는 모든 컴포넌트들을 atom을 구독하므로 atom이 변하면 구독하는 모든 컴포넌트가 리렌더링 된다.
+
+
+
+### useSetRecoilState
+
+```jsx
+import { useSetRecoilState } from "recoil";
+import { todoListState } from "./atoms";
+
+// 고유한 Id 생성을 위한 유틸리티
+let id = 0;
+const getId = () => id++;
+
+const TodoItemCreator = () => {
+...
+  const setTodoList = useSetRecoilState(todoListState); // todoListState의 setter를 가져옴
+
+  const addItem = () => {
+    setTodoList((oldTodoList) => [
+      ...oldTodoList,
+      {
+        id: getId(),
+        text: inputValue,
+        isComplete: false,
+      },
+    ]);
+    setInputValue("");
+  };
+...
+};
+...
+```
+
+setter만 필요할 경우 사용
