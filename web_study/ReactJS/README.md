@@ -294,3 +294,17 @@ const TodoItemCreator = () => {
 ```
 
 setter만 필요할 경우 사용
+
+
+
+### useRecoilState
+
+```jsx
+import { useRecoilState } from "recoil";
+import { todoListState } from "./atoms";
+
+const TodoItem = ({ item }) => {
+  const [todoList, setTodoList] = useRecoilState(todoListState);
+```
+
+state와 setter 모두 필요할 때 사용.
