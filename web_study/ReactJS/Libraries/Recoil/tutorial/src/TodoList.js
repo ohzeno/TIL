@@ -3,13 +3,14 @@ import { filteredTodoListState } from "./selectors";
 import TodoItemCreator from "./TodoItemCreator";
 import TodoItem from "./TodoItem";
 import TodoListFilters from "./TodoListFilters";
+import TodoListStats from "./TodoListStats";
 
 const TodoList = () => {
   const todoList = useRecoilValue(filteredTodoListState); // selector 사용
 
   return (
     <>
-      {/* <TodoListStats /> */}
+      <TodoListStats />
       <TodoListFilters />
       <TodoItemCreator />
 
