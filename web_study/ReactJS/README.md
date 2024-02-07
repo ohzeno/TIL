@@ -229,6 +229,8 @@ const { onCreate } = useContext(DiaryDispatchContext);
 
 ## Recoil
 
+[공식문서](https://recoiljs.org/ko/docs/basic-tutorial/intro)
+
 ### RecoilRoot
 
 ```jsx
@@ -308,3 +310,57 @@ const TodoItem = ({ item }) => {
 ```
 
 state와 setter 모두 필요할 때 사용.
+
+
+
+### Selectors
+
+#### selectors.js
+
+```jsx
+import { selector } from "recoil";
+import { todoListState, todoListFilterState } from "./atoms";
+
+export const filteredTodoListState = selector({
+  key: "filteredTodoListState",
+  get: ({ get }) => {
+    const filter = get(todoListFilterState);
+    const list = get(todoListState);
+
+    switch (filter) {
+      case "Show Completed":
+        return list.filter((item) => item.isComplete);
+      case "Show Uncompleted":
+        return list.filter((item) => !item.isComplete);
+      default:
+        return list;
+    }
+  },
+});
+```
+
+todoListFilterState, todoListState 중 하나라도 변하면 filteredTodoListState가 다시 실행된다.
+
+#### TodoList.js
+
+```jsx
+import { useRecoilValue } from "recoil";
+import { filteredTodoListState } from "./selectors";
+import TodoItem from "./TodoItem";
+
+const TodoList = () => {
+  const todoList = useRecoilValue(filteredTodoListState); // selector 사용  
+  return (
+    <>
+      {todoList.map((todoItem) => (
+        <TodoItem key={todoItem.id} item={todoItem} />
+      ))}
+    </>
+  );
+};
+
+export default TodoList;
+
+```
+
+필터링된 값 사용
