@@ -81,3 +81,48 @@ else:  # 경로 다르다면
 폴더 내용물만 옮기려면 이전과 같이 os.listdir를 사용하여 받아온 파일들을 옮기고
 
 폴더를 삭제해야 하는데, 폴더는 os.remove로 안된다. os.rmdir를 사용해야 한다.
+
+
+
+## 삭제
+
+- ### 휴지통을 거치지 않음
+
+  - #### 파일
+
+    - os.remove(파일경로)
+      - 파일 삭제. 폴더 불가.
+
+    - Path.unlink()
+
+      ```py
+      from pathlib import Path
+      file_path = Path(os.path.join(dir1, sub_dir))
+      file_path.unlink()
+      ```
+
+      파일 삭제. 폴더 불가.
+
+  - #### 폴더
+
+    - os.rmdir(폴더 경로)
+      - 비어있는 폴더를 삭제. 내용물이 있으면 에러 발생.
+      - 파일 불가.
+    - shutil.rmtree(폴더경로)
+      - 폴더와 폴더 내부 모든 파일/폴더를 삭제. 내용물이 있든 없든 삭제.
+      - 파일 하나를 직접 지정하는건 불가.
+
+    - Path.rmdir()
+      - 비어있는 폴더를 삭제. 내용물이 있으면 에러 발생.
+      - 파일 불가.
+
+- ### 휴지통으로
+
+  ```py
+  from send2trash import send2trash
+  send2trash(paths=파일 or 폴더 경로 리스트)
+  ```
+
+  파일, 폴더 모두 가능. 
+
+  paths로 경로 리스트를 건내면 여럿 삭제도 가능.
