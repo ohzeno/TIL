@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { User } from '../user.entity';
@@ -15,6 +16,11 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('search')
+  async searchUsers(@Query('query') query: string): Promise<User[]> {
+    return this.userService.searchUsers(query);
+  }
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {

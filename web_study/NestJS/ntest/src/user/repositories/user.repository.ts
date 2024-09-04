@@ -61,4 +61,18 @@ export class UserRepository {
       throw error;
     }
   }
+
+  async search(query: string): Promise<User[]> {
+    try {
+      const users = (await this.db.getData('/users')) as Record<string, User>;
+      return Object.values(users).filter(
+        (user: User) =>
+          user.name.toLowerCase().includes(query.toLowerCase()) ||
+          user.age.toString().includes(query),
+      );
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return [];
+    }
+  }
 }
