@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JsonDB, Config } from 'node-json-db';
 import { User } from '../user.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from '../dtos/create-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -11,8 +12,8 @@ export class UserRepository {
     this.db = new JsonDB(new Config('myDatabase', true, false, '/'));
   }
 
-  async create(user: User): Promise<User> {
-    const newUser = { ...user, id: uuidv4() };
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = { ...createUserDto, id: uuidv4() };
     await this.db.push(`/users/${newUser.id}`, newUser);
     return newUser;
   }
