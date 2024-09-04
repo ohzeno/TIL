@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -10,6 +10,7 @@ import {
 import { UserService } from '../services/user.service';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -30,12 +31,12 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async updateUser(
     @Param('id') id: string,
-    @Body() user: Partial<User>,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.updateUser(id, user);
+    return this.userService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
