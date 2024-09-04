@@ -3,6 +3,7 @@ import { JsonDB, Config } from 'node-json-db';
 import { User } from '../user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -38,23 +39,25 @@ export class UserRepository {
     }
   }
 
-  async update(id: string, user: Partial<User>): Promise<User | null> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
     const existingUser = await this.findOne(id);
     if (!existingUser) return null;
 
-    const updatedUser = { ...existingUser, ...user };
+    const updatedUser = { ...existingUser, ...updateUserDto };
     await this.db.push(`/users/${id}`, updatedUser);
     return updatedUser;
   }
 
   async delete(id: string): Promise<boolean> {
     try {
+      const existingUser = await this.findOne(id);
+      if (!existingUser) {
+        return false;
+      }
       await this.db.delete(`/users/${id}`);
       return true;
     } catch (error) {
-      if (error.message.includes("Can't find dataPath")) {
-        return false;
-      }
+      console.error(`Error deleting user with id ${id}:`, error);
       throw error;
     }
   }
