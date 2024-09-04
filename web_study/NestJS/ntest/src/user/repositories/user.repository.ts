@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JsonDB, Config } from 'node-json-db';
 import { User } from '../user.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserRepository {
@@ -11,8 +12,9 @@ export class UserRepository {
   }
 
   async create(user: User): Promise<User> {
-    await this.db.push(`/users/${user.id}`, user);
-    return user;
+    const newUser = { ...user, id: uuidv4() };
+    await this.db.push(`/users/${newUser.id}`, newUser);
+    return newUser;
   }
 
   async findAll(): Promise<User[]> {
