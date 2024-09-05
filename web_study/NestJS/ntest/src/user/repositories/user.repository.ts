@@ -24,7 +24,10 @@ export class UserRepository {
       const users = await this.db.getData('/users');
       return Object.values(users);
     } catch (error) {
-      return [];
+      if (error.message.includes("Can't find dataPath")) {
+        return [];
+      }
+      throw error;
     }
   }
 
