@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserRepository } from '../repositories/user.repository';
+import { NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -63,6 +64,28 @@ describe('UserService', () => {
 
       expect(repository.findAll).toHaveBeenCalled();
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a user if found', async () => {
+      const mockUser = { id: '1', name: 'Test User', age: 30 };
+      repository.findOne.mockResolvedValue(mockUser);
+
+      const result = await service.findOne('1');
+
+      expect(repository.findOne).toHaveBeenCalledWith('1');
+      expect(result).toEqual(mockUser);
+    });
+
+    it('should throw NotFoundException with proper message if user is not found', async () => {
+      const id = '1';
+      repository.findOne.mockResolvedValue(null);
+
+      await expect(service.findOne(id)).rejects.toThrow(
+        new NotFoundException(`User with ID "${id}" not found`),
+      );
+      expect(repository.findOne).toHaveBeenCalledWith(id);
     });
   });
 });
