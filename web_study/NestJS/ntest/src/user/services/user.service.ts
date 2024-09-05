@@ -41,12 +41,6 @@ export class UserService {
   }
 
   async searchUsers(query: string): Promise<User[]> {
-    const users = await this.userRepository.search(query);
-    if (users.length === 0) {
-      throw new NotFoundException(
-        `No users found matching the query: ${query}`,
-      );
-    }
-    return users;
+    return this.userRepository.search(query);
   }
 }
