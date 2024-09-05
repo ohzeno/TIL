@@ -108,4 +108,38 @@ describe('UserRepository', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('update', () => {
+    it('should call repository methods correctly and return the updated user when user exists', async () => {
+      const userId = '1';
+      const existingUser = { id: userId, name: 'Old Name', age: 25 };
+      const updateUserDto = { name: 'New Name', age: 30 };
+      const updatedUser = { ...existingUser, ...updateUserDto };
+
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(existingUser);
+      jsonDBMock.push.mockResolvedValueOnce(undefined);
+
+      const result = await repository.update(userId, updateUserDto);
+
+      expect(repository.findOne).toHaveBeenCalledWith(userId);
+      expect(jsonDBMock.push).toHaveBeenCalledWith(
+        `/users/${userId}`,
+        updatedUser,
+      );
+      expect(result).toEqual(updatedUser);
+    });
+
+    it('should return null when trying to update a non-existent user', async () => {
+      const userId = '999';
+      const updateUserDto = { name: 'New Name', age: 30 };
+
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(null);
+
+      const result = await repository.update(userId, updateUserDto);
+
+      expect(repository.findOne).toHaveBeenCalledWith(userId);
+      expect(jsonDBMock.push).not.toHaveBeenCalled();
+      expect(result).toBeNull();
+    });
+  });
 });
