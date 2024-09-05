@@ -137,4 +137,31 @@ describe('UserService', () => {
       expect(repository.delete).toHaveBeenCalledWith(id);
     });
   });
+
+  describe('searchUsers', () => {
+    it('should call repository.search with the given query and return the result', async () => {
+      const query = 'test';
+      const mockUsers = [
+        { id: '1', name: 'Test User 1', age: 25 },
+        { id: '2', name: 'Test User 2', age: 30 },
+      ];
+
+      repository.search.mockResolvedValue(mockUsers);
+
+      const result = await service.searchUsers(query);
+
+      expect(repository.search).toHaveBeenCalledWith(query);
+      expect(result).toEqual(mockUsers);
+    });
+
+    it('should return an empty array if no users match the search query', async () => {
+      const query = 'nonexistent';
+      repository.search.mockResolvedValue([]);
+
+      const result = await service.searchUsers(query);
+
+      expect(repository.search).toHaveBeenCalledWith(query);
+      expect(result).toEqual([]);
+    });
+  });
 });
