@@ -83,4 +83,29 @@ describe('UserRepository', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findOne', () => {
+    it('should call JsonDB.getData with the correct path and return the user when found', async () => {
+      const userId = '1';
+      const mockUser = { id: userId, name: 'Test User', age: 30 };
+      jsonDBMock.getData.mockResolvedValue(mockUser);
+
+      const result = await repository.findOne(userId);
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith(`/users/${userId}`);
+      expect(result).toEqual(mockUser);
+    });
+
+    it('should return null when user is not found', async () => {
+      const userId = '999';
+      jsonDBMock.getData.mockRejectedValue(
+        new DataError("Can't find dataPath: /users/999. Stopped at 999", 5),
+      );
+
+      const result = await repository.findOne(userId);
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith(`/users/${userId}`);
+      expect(result).toBeNull();
+    });
+  });
 });
