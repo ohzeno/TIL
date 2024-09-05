@@ -1,10 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserRepository } from './user.repository';
-import { JsonDB } from 'node-json-db';
+import { JsonDB, DataError } from 'node-json-db';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 
-jest.mock('node-json-db');
+jest.mock('node-json-db', () => {
+  const actualModule = jest.requireActual('node-json-db');
+  return {
+    ...actualModule,
+    JsonDB: jest.fn().mockImplementation(() => ({
+      push: jest.fn(),
+      getData: jest.fn(),
+      delete: jest.fn(),
+    })),
+  };
+});
 jest.mock('uuid');
 
 describe('UserRepository', () => {
@@ -45,6 +55,32 @@ describe('UserRepository', () => {
         expectedUser,
       );
       expect(result).toEqual(expectedUser);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should call JsonDB.getData with the correct path and return all users when users exist', async () => {
+      const mockUsers = {
+        '1': { id: '1', name: 'User 1', age: 25 },
+        '2': { id: '2', name: 'User 2', age: 30 },
+      };
+      jsonDBMock.getData.mockResolvedValue(mockUsers);
+
+      const result = await repository.findAll();
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
+      expect(result).toEqual(Object.values(mockUsers));
+    });
+
+    it('should call JsonDB.getData and return an empty array when no users exist', async () => {
+      jsonDBMock.getData.mockRejectedValue(
+        new DataError("Can't find dataPath: /users. Stopped at users", 5),
+      );
+
+      const result = await repository.findAll();
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
+      expect(result).toEqual([]);
     });
   });
 });
