@@ -88,4 +88,31 @@ describe('UserService', () => {
       expect(repository.findOne).toHaveBeenCalledWith(id);
     });
   });
+
+  describe('updateUser', () => {
+    it('should update a user if found', async () => {
+      const id = '1';
+      const updateUserDto = { name: 'Updated User', age: 35 };
+      const updatedUser = { id, ...updateUserDto };
+
+      repository.update.mockResolvedValue(updatedUser);
+
+      const result = await service.updateUser(id, updateUserDto);
+
+      expect(repository.update).toHaveBeenCalledWith(id, updateUserDto);
+      expect(result).toEqual(updatedUser);
+    });
+
+    it('should throw NotFoundException if user is not found during update', async () => {
+      const id = '1';
+      const updateUserDto = { name: 'Updated User', age: 35 };
+
+      repository.update.mockResolvedValue(null);
+
+      await expect(service.updateUser(id, updateUserDto)).rejects.toThrow(
+        new NotFoundException(`User with ID "${id}" not found`),
+      );
+      expect(repository.update).toHaveBeenCalledWith(id, updateUserDto);
+    });
+  });
 });
