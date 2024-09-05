@@ -26,7 +26,7 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    it('should create a new user', async () => {
+    it('should call repository.create with the given user data and return the result', async () => {
       const mockUuid = 'mocked-uuid';
       jest.mocked(uuidv4).mockReturnValue(mockUuid);
 
@@ -43,7 +43,7 @@ describe('UserService', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of users', async () => {
+    it('should call repository.findAll and return the result', async () => {
       const mockUsers = [
         { id: '1', name: 'User 1', age: 25 },
         { id: '2', name: 'User 2', age: 30 },
@@ -57,7 +57,7 @@ describe('UserService', () => {
       expect(result).toEqual(mockUsers);
     });
 
-    it('should return an empty array if no users found', async () => {
+    it('should return an empty array if repository.findAll returns an empty array', async () => {
       repository.findAll.mockResolvedValue([]);
 
       const result = await service.findAll();
@@ -68,7 +68,7 @@ describe('UserService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a user if found', async () => {
+    it('should call repository.findOne with the given id and return the result', async () => {
       const mockUser = { id: '1', name: 'Test User', age: 30 };
       repository.findOne.mockResolvedValue(mockUser);
 
@@ -78,7 +78,7 @@ describe('UserService', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('should throw NotFoundException with proper message if user is not found', async () => {
+    it('should throw NotFoundException if repository.findOne returns null', async () => {
       const id = '1';
       repository.findOne.mockResolvedValue(null);
 
@@ -90,7 +90,7 @@ describe('UserService', () => {
   });
 
   describe('updateUser', () => {
-    it('should update a user if found', async () => {
+    it('should call repository.update with the given id and user data and return the result', async () => {
       const id = '1';
       const updateUserDto = { name: 'Updated User', age: 35 };
       const updatedUser = { id, ...updateUserDto };
@@ -103,7 +103,7 @@ describe('UserService', () => {
       expect(result).toEqual(updatedUser);
     });
 
-    it('should throw NotFoundException if user is not found during update', async () => {
+    it('should throw NotFoundException if repository.update returns null', async () => {
       const id = '1';
       const updateUserDto = { name: 'Updated User', age: 35 };
 
@@ -113,6 +113,28 @@ describe('UserService', () => {
         new NotFoundException(`User with ID "${id}" not found`),
       );
       expect(repository.update).toHaveBeenCalledWith(id, updateUserDto);
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('should call repository.delete with the given id and return true if successful', async () => {
+      const id = '1';
+      repository.delete.mockResolvedValue(true);
+
+      const result = await service.deleteUser(id);
+
+      expect(repository.delete).toHaveBeenCalledWith(id);
+      expect(result).toBe(true);
+    });
+
+    it('should throw NotFoundException if repository.delete returns false', async () => {
+      const id = '1';
+      repository.delete.mockResolvedValue(false);
+
+      await expect(service.deleteUser(id)).rejects.toThrow(
+        new NotFoundException(`User with ID "${id}" not found`),
+      );
+      expect(repository.delete).toHaveBeenCalledWith(id);
     });
   });
 });
