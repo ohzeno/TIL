@@ -40,4 +40,29 @@ describe('UserService', () => {
       expect(result).toEqual(createdUser);
     });
   });
+
+  describe('findAll', () => {
+    it('should return an array of users', async () => {
+      const mockUsers = [
+        { id: '1', name: 'User 1', age: 25 },
+        { id: '2', name: 'User 2', age: 30 },
+      ];
+
+      repository.findAll.mockResolvedValue(mockUsers);
+
+      const result = await service.findAll();
+
+      expect(repository.findAll).toHaveBeenCalled();
+      expect(result).toEqual(mockUsers);
+    });
+
+    it('should return an empty array if no users found', async () => {
+      repository.findAll.mockResolvedValue([]);
+
+      const result = await service.findAll();
+
+      expect(repository.findAll).toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+  });
 });
