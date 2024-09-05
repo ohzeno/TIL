@@ -142,4 +142,32 @@ describe('UserRepository', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('delete', () => {
+    it('should call JsonDB.delete with the correct path and return true when user is found', async () => {
+      const userId = '1';
+      const mockUser = { id: userId, name: 'Test User', age: 30 };
+
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(mockUser);
+      jsonDBMock.delete.mockResolvedValueOnce(undefined);
+
+      const result = await repository.delete(userId);
+
+      expect(repository.findOne).toHaveBeenCalledWith(userId);
+      expect(jsonDBMock.delete).toHaveBeenCalledWith(`/users/${userId}`);
+      expect(result).toBe(true);
+    });
+
+    it('should return false when user is not found', async () => {
+      const userId = '999';
+
+      jest.spyOn(repository, 'findOne').mockResolvedValueOnce(null);
+
+      const result = await repository.delete(userId);
+
+      expect(repository.findOne).toHaveBeenCalledWith(userId);
+      expect(jsonDBMock.delete).not.toHaveBeenCalled();
+      expect(result).toBe(false);
+    });
+  });
 });
