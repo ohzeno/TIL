@@ -3,6 +3,7 @@ import { UserRepository } from './user.repository';
 import { JsonDB, DataError } from 'node-json-db';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { AppModule } from '../../app.module';
 
 jest.mock('node-json-db', () => {
   const actualModule = jest.requireActual('node-json-db');
@@ -23,6 +24,7 @@ describe('UserRepository', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
       providers: [UserRepository],
     }).compile();
 
@@ -217,6 +219,32 @@ describe('UserRepository', () => {
 
       expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
       expect(result).toEqual(expectedUsers);
+    });
+  });
+
+  describe('deleteAll', () => {
+    it('should call JsonDB.delete with the correct path when deleting all users', async () => {
+      const user1 = { id: '1', name: 'User 1', age: 25 };
+      const user2 = { id: '2', name: 'User 2', age: 30 };
+      jsonDBMock.getData.mockResolvedValue({ '1': user1, '2': user2 });
+
+      await repository.deleteAll();
+
+      expect(jsonDBMock.delete).toHaveBeenCalledWith('/users');
+
+      jsonDBMock.getData.mockRejectedValue(
+        new DataError("Can't find dataPath: /users", 5),
+      );
+      const users = await repository.findAll();
+      expect(users).toEqual([]);
+    });
+
+    it('should not throw an error when JsonDB.delete throws a DataError', async () => {
+      jsonDBMock.delete.mockRejectedValue(
+        new DataError("Can't find dataPath: /users", 5),
+      );
+
+      await expect(repository.deleteAll()).resolves.not.toThrow();
     });
   });
 });
