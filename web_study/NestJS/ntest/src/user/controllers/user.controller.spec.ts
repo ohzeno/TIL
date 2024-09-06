@@ -90,4 +90,39 @@ describe('UserController', () => {
       expect(userService.findOne).toHaveBeenCalledWith(userId);
     });
   });
+
+  describe('updateUser', () => {
+    it('should call userService.updateUser with the given id and user data and return the result', async () => {
+      const userId = '1';
+      const updateUserDto = { name: 'Updated User', age: 35 };
+      const expectedUser: User = { id: userId, ...updateUserDto };
+
+      userService.updateUser.mockResolvedValue(expectedUser);
+
+      const result = await controller.updateUser(userId, updateUserDto);
+
+      expect(userService.updateUser).toHaveBeenCalledWith(
+        userId,
+        updateUserDto,
+      );
+      expect(result).toEqual(expectedUser);
+    });
+
+    it('should call userService.updateUser and throw NotFoundException when user does not exist', async () => {
+      const userId = '999';
+      const updateUserDto = { name: 'Updated User', age: 35 };
+
+      userService.updateUser.mockRejectedValue(
+        new NotFoundException(`User with ID "${userId}" not found`),
+      );
+
+      await expect(
+        controller.updateUser(userId, updateUserDto),
+      ).rejects.toThrow(NotFoundException);
+      expect(userService.updateUser).toHaveBeenCalledWith(
+        userId,
+        updateUserDto,
+      );
+    });
+  });
 });
