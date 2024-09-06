@@ -122,3 +122,5 @@ fabric.properties
 
 # vscode
 .vscode/
+
+web_study/NestJS/ntest/.env.test
