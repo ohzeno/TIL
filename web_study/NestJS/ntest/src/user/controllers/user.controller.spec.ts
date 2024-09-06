@@ -125,4 +125,30 @@ describe('UserController', () => {
       );
     });
   });
+
+  describe('deleteUser', () => {
+    it('should call userService.deleteUser with the given id and return the result', async () => {
+      const userId = '1';
+
+      userService.deleteUser.mockResolvedValue(true);
+
+      const result = await controller.deleteUser(userId);
+
+      expect(userService.deleteUser).toHaveBeenCalledWith(userId);
+      expect(result).toBe(true);
+    });
+
+    it('should call userService.deleteUser and throw NotFoundException when user does not exist', async () => {
+      const userId = '999';
+
+      userService.deleteUser.mockRejectedValue(
+        new NotFoundException(`User with ID "${userId}" not found`),
+      );
+
+      await expect(controller.deleteUser(userId)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(userService.deleteUser).toHaveBeenCalledWith(userId);
+    });
+  });
 });
