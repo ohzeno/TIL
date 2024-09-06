@@ -170,4 +170,53 @@ describe('UserRepository', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('search', () => {
+    it('should call JsonDB.getData with the correct path and return matching users', async () => {
+      const mockUsers = {
+        '1': { id: '1', name: 'John Doe', age: 30 },
+        '2': { id: '2', name: 'Jane Doe', age: 25 },
+        '3': { id: '3', name: 'Bob Smith', age: 40 },
+      };
+      jsonDBMock.getData.mockResolvedValue(mockUsers);
+
+      const expectedUsers = [
+        { id: '1', name: 'John Doe', age: 30 },
+        { id: '2', name: 'Jane Doe', age: 25 },
+      ];
+
+      const result = await repository.search('doe');
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
+      expect(result).toEqual(expectedUsers);
+    });
+
+    it('should return an empty array when no users match the search query', async () => {
+      const mockUsers = {
+        '1': { id: '1', name: 'John Doe', age: 30 },
+        '2': { id: '2', name: 'Jane Doe', age: 25 },
+      };
+      jsonDBMock.getData.mockResolvedValue(mockUsers);
+
+      const expectedUsers = [];
+
+      const result = await repository.search('smith');
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
+      expect(result).toEqual(expectedUsers);
+    });
+
+    it('should return an empty array when JsonDB.getData throws an error', async () => {
+      jsonDBMock.getData.mockRejectedValue(
+        new DataError("Can't find dataPath: /users. Stopped at users", 5),
+      );
+
+      const expectedUsers = [];
+
+      const result = await repository.search('doe');
+
+      expect(jsonDBMock.getData).toHaveBeenCalledWith('/users');
+      expect(result).toEqual(expectedUsers);
+    });
+  });
 });
