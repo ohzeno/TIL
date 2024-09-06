@@ -41,4 +41,25 @@ describe('AppController (e2e)', () => {
     const allUsers = await userRepository.findAll();
     expect(allUsers).toHaveLength(1);
   });
+
+  it('/users (GET)', async () => {
+    const user1 = await userRepository.create({ name: '홍길동', age: 30 });
+    const user2 = await userRepository.create({ name: '김철수', age: 25 });
+    const user3 = await userRepository.create({ name: '이영희', age: 35 });
+
+    const response = await request(app.getHttpServer())
+      .get('/users')
+      .expect(200);
+
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body).toHaveLength(3);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: user1.id, name: '홍길동', age: 30 }),
+        expect.objectContaining({ id: user2.id, name: '김철수', age: 25 }),
+        expect.objectContaining({ id: user3.id, name: '이영희', age: 35 }),
+      ]),
+    );
+  });
 });
