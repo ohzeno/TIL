@@ -4,13 +4,15 @@ import { User } from '../user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserRepository {
   private db: JsonDB;
 
-  constructor() {
-    this.db = new JsonDB(new Config('myDatabase', true, false, '/'));
+  constructor(private configService: ConfigService) {
+    const dbName = this.configService.get<string>('DATABASE_NAME');
+    this.db = new JsonDB(new Config(dbName, true, false, '/'));
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -76,6 +78,16 @@ export class UserRepository {
     } catch (error) {
       console.error('Error searching users:', error);
       return [];
+    }
+  }
+
+  async deleteAll(): Promise<void> {
+    try {
+      await this.db.delete('/users');
+    } catch (error) {
+      if (!error.message.includes("Can't find dataPath")) {
+        throw error;
+      }
     }
   }
 }
