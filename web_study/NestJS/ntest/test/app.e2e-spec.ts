@@ -132,4 +132,41 @@ describe('AppController (e2e)', () => {
       expect.objectContaining({ id: createdUser.id }),
     );
   });
+
+  it('/users/search (GET)', async () => {
+    await userRepository.create({ name: '홍길동', age: 30 });
+    await userRepository.create({ name: '홍길순', age: 25 });
+    await userRepository.create({ name: '김철수', age: 35 });
+    await userRepository.create({ name: '이영희', age: 28 });
+
+    const response1 = await request(app.getHttpServer())
+      .get(`/users/search?query=${encodeURIComponent('홍')}`)
+      .expect(200);
+
+    expect(response1.body).toBeInstanceOf(Array);
+    expect(response1.body).toHaveLength(2);
+    expect(response1.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: '홍길동', age: 30 }),
+        expect.objectContaining({ name: '홍길순', age: 25 }),
+      ]),
+    );
+
+    const response2 = await request(app.getHttpServer())
+      .get('/users/search?query=28')
+      .expect(200);
+
+    expect(response2.body).toBeInstanceOf(Array);
+    expect(response2.body).toHaveLength(1);
+    expect(response2.body[0]).toEqual(
+      expect.objectContaining({ name: '이영희', age: 28 }),
+    );
+
+    const response3 = await request(app.getHttpServer())
+      .get(`/users/search?query=${encodeURIComponent('없는사람')}`)
+      .expect(200);
+
+    expect(response3.body).toBeInstanceOf(Array);
+    expect(response3.body).toHaveLength(0);
+  });
 });
