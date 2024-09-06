@@ -25,7 +25,7 @@ describe('UserController', () => {
   });
 
   describe('createUser', () => {
-    it('should create a new user', async () => {
+    it('should call userService.createUser with the given user data and return the result', async () => {
       const createUserDto: CreateUserDto = { name: 'Test User', age: 30 };
       const expectedUser: User = { id: '1', ...createUserDto };
 
@@ -35,6 +35,31 @@ describe('UserController', () => {
 
       expect(userService.createUser).toHaveBeenCalledWith(createUserDto);
       expect(result).toEqual(expectedUser);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should call userService.findAll and return the result when users exist', async () => {
+      const expectedUsers: User[] = [
+        { id: '1', name: 'User 1', age: 30 },
+        { id: '2', name: 'User 2', age: 25 },
+      ];
+
+      userService.findAll.mockResolvedValue(expectedUsers);
+
+      const result = await controller.findAll();
+
+      expect(userService.findAll).toHaveBeenCalled();
+      expect(result).toEqual(expectedUsers);
+    });
+
+    it('should call userService.findAll and return an empty array when no users exist', async () => {
+      userService.findAll.mockResolvedValue([]);
+
+      const result = await controller.findAll();
+
+      expect(userService.findAll).toHaveBeenCalled();
+      expect(result).toEqual([]);
     });
   });
 });
