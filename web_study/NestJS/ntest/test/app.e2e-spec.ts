@@ -62,4 +62,23 @@ describe('AppController (e2e)', () => {
       ]),
     );
   });
+
+  it('/users/:id (GET)', async () => {
+    const createdUser = await userRepository.create({
+      name: '홍길동',
+      age: 30,
+    });
+
+    const response = await request(app.getHttpServer())
+      .get(`/users/${createdUser.id}`)
+      .expect(200);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: createdUser.id,
+        name: '홍길동',
+        age: 30,
+      }),
+    );
+  });
 });
