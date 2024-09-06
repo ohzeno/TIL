@@ -81,4 +81,36 @@ describe('AppController (e2e)', () => {
       }),
     );
   });
+
+  it('/users/:id (PATCH)', async () => {
+    const createdUser = await userRepository.create({
+      name: '홍길동',
+      age: 30,
+    });
+
+    const updateData = {
+      name: '홍길순',
+      age: 31,
+    };
+
+    const response = await request(app.getHttpServer())
+      .patch(`/users/${createdUser.id}`)
+      .send(updateData)
+      .expect(200);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: createdUser.id,
+        ...updateData,
+      }),
+    );
+
+    const updatedUser = await userRepository.findOne(createdUser.id);
+    expect(updatedUser).toEqual(
+      expect.objectContaining({
+        id: createdUser.id,
+        ...updateData,
+      }),
+    );
+  });
 });
