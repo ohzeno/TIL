@@ -3,6 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../user.entity';
+import { NotFoundException } from '@nestjs/common';
 
 jest.mock('../services/user.service');
 
@@ -60,6 +61,33 @@ describe('UserController', () => {
 
       expect(userService.findAll).toHaveBeenCalled();
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should call userService.findOne with the given id and return the result when user exists', async () => {
+      const userId = '1';
+      const expectedUser: User = { id: userId, name: 'Test User', age: 30 };
+
+      userService.findOne.mockResolvedValue(expectedUser);
+
+      const result = await controller.findOne(userId);
+
+      expect(userService.findOne).toHaveBeenCalledWith(userId);
+      expect(result).toEqual(expectedUser);
+    });
+
+    it('should call userService.findOne and throw NotFoundException when user does not exist', async () => {
+      const userId = '999';
+
+      userService.findOne.mockRejectedValue(
+        new NotFoundException(`User with ID "${userId}" not found`),
+      );
+
+      await expect(controller.findOne(userId)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(userService.findOne).toHaveBeenCalledWith(userId);
     });
   });
 });
