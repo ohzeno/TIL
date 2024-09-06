@@ -151,4 +151,31 @@ describe('UserController', () => {
       expect(userService.deleteUser).toHaveBeenCalledWith(userId);
     });
   });
+
+  describe('searchUsers', () => {
+    it('should call userService.searchUsers with the given query and return the result', async () => {
+      const query = 'test';
+      const expectedUsers: User[] = [
+        { id: '1', name: 'Test User 1', age: 30 },
+        { id: '2', name: 'Test User 2', age: 25 },
+      ];
+
+      userService.searchUsers.mockResolvedValue(expectedUsers);
+
+      const result = await controller.searchUsers(query);
+
+      expect(userService.searchUsers).toHaveBeenCalledWith(query);
+      expect(result).toEqual(expectedUsers);
+    });
+
+    it('should return an empty array when no users match the search query', async () => {
+      const query = 'nonexistent';
+      userService.searchUsers.mockResolvedValue([]);
+
+      const result = await controller.searchUsers(query);
+
+      expect(userService.searchUsers).toHaveBeenCalledWith(query);
+      expect(result).toEqual([]);
+    });
+  });
 });
