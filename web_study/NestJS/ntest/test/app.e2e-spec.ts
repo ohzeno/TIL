@@ -113,4 +113,23 @@ describe('AppController (e2e)', () => {
       }),
     );
   });
+
+  it('/users/:id (DELETE)', async () => {
+    const createdUser = await userRepository.create({
+      name: '홍길동',
+      age: 30,
+    });
+
+    await request(app.getHttpServer())
+      .delete(`/users/${createdUser.id}`)
+      .expect(200);
+
+    const deletedUser = await userRepository.findOne(createdUser.id);
+    expect(deletedUser).toBeNull();
+
+    const allUsers = await userRepository.findAll();
+    expect(allUsers).not.toContainEqual(
+      expect.objectContaining({ id: createdUser.id }),
+    );
+  });
 });
