@@ -17,9 +17,28 @@ def create_text_image_with_background(text, background_image_path,
     # 텍스트 추가를 위한 드로잉 객체 생성
     d = ImageDraw.Draw(img)
 
-    # 검은색 반투명 레이어 추가
-    overlay = Image.new("RGBA", img.size, (0, 0, 0, overlay_opacity))  # 검은색(0,0,0) + 투명도
-    img = Image.alpha_composite(img.convert("RGBA"), overlay)  # 배경 이미지와 오버레이 합성
+    # 상단이 짙고 하단이 옅은 흰색 그라데이션 생성
+    gradient = Image.new('RGBA', (img_width, img_height), color=0)
+    for y in range(img_height):
+        # 투명도는 y값에 따라 점점 줄어듭니다.
+        # alpha = int(255 * (1 - (y / img_height) ** 3))  # 상단이 짙고 하단으로 갈수록 투명해짐
+        if y < img_height * 2 / 3:
+            # 상단 2/3 부분은 기존 투명도 계산 방식 사용
+            alpha = int(255 * (1 - (y / img_height) ** 2))  # 상단이 짙고 하단으로 갈수록 투명해짐
+        else:
+            # 하단 1/3 부분: 초기 alpha 값은 상단 2/3 끝값으로 설정
+            # 초기값 설정: y = 2/3일 때 alpha 값
+            initial_alpha = 255 * (1 - (2 / 3) ** 2)
+
+            # 하단 1/3에서 alpha는 초기값에서 천천히 감소
+            progress_in_lower_third = (y - img_height * 2 / 3) / (img_height / 3)  # 0에서 1까지 변화
+            alpha = int(initial_alpha * (1 - progress_in_lower_third * 0.5))  # 50%만 더 감소
+
+        for x in range(img_width):
+            gradient.putpixel((x, y), (255, 255, 255, alpha))  # 흰색 + 투명도
+
+    # 배경 이미지와 그라데이션 레이어 합성
+    img = Image.alpha_composite(img.convert("RGBA"), gradient)
 
     # 폰트 설정
     font_size = max_fontsize
@@ -45,7 +64,7 @@ def create_text_image_with_background(text, background_image_path,
 
     # 텍스트 높이 계산
     total_text_height = sum([get_line_height(font, line) if line.strip() else get_line_height(font, "A") // 2 for line in lines])
-    y_offset = (img_height - total_text_height) // 2
+    y_offset = (img_height - total_text_height) // 3
 
     # 텍스트 그리기
     d = ImageDraw.Draw(img)  # 새 드로잉 객체 생성 (합성된 이미지로)
@@ -56,7 +75,7 @@ def create_text_image_with_background(text, background_image_path,
             bbox = d.textbbox((0, 0), line, font=font)
             text_width = bbox[2] - bbox[0]
             position = ((img_width - text_width) // 2, y_offset)  # 수평 중앙 배치
-            d.text(position, line, font=font, fill=(255, 255, 255))  # 흰색 텍스트 그리기
+            d.text(position, line, font=font, fill=(0, 0, 0))  # 흰색 텍스트 그리기
             y_offset += get_line_height(font, line)  # 줄 간 여백 포함하여 y_offset 조정
 
     return img.convert("RGB")  # 최종 이미지를 RGB 모드로 변환
