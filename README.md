@@ -18,4 +18,8 @@
     - [nestjs](web-study/nestjs/README.md)
     - [reactjs](web-study/reactjs/README.md)
     - [express](web-study/express/README.md)
+  - software-engineering
+    - oop
+    - solid
+    - design-patterns
 
