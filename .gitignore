@@ -117,6 +117,9 @@ fabric.properties
 # env files
 .env
 
+# node_modules
+node_modules/
+
 # csv files
 *.csv
 
