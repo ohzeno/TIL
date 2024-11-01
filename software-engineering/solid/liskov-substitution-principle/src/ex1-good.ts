@@ -6,11 +6,11 @@ interface Shape {
 class Rectangle implements Shape {
   constructor(public width: number, public height: number) {}
 
-  setWidth(width: number): void {
+  public setWidth(width: number): void {
     this.width = width;
   }
 
-  setHeight(height: number): void {
+  public setHeight(height: number): void {
     this.height = height;
   }
 
@@ -22,7 +22,7 @@ class Rectangle implements Shape {
 class Square implements Shape {
   constructor(public size: number) {}
 
-  setSize(size: number): void {
+  public setSize(size: number): void {
     this.size = size;
   }
 
