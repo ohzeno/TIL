@@ -26,6 +26,7 @@ class Rectangle extends Shape {
 const rect: Shape = new Rectangle(5, 4);
 const circle: Shape = new Circle(3);
 
+// 일관된 방법으로 Shape과 그 하위 클래스들을 사용할 수 있음.
 function getTotalArea(shapes: Shape[]): number {
   return shapes.reduce((totalArea, shape) => totalArea + shape.area(), 0);
 }

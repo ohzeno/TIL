@@ -19,9 +19,10 @@ class Dog extends Animal {
     console.log("Woof! Woof!");
   }
 
+  // 물려받은 move 오버라이드 가능.
   move(distance: number = 5) {
     console.log("The dog is running...");
-    super.move(distance);
+    super.move(distance); // 부모의 move 사용 가능.
   }
 }
 

@@ -1,3 +1,4 @@
+// 제네릭 사용으로 다양한 타입을 일관된 방식으로 다룰 수 있음.
 function identity<T>(value: T): T {
   return value;
 }

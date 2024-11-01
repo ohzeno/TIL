@@ -7,6 +7,7 @@ describe("User", () => {
     user = new User("John", "john@example.com");
   });
 
+  // 기능 분리로 테스트가 쉬워짐.
   describe("Database Operations", () => {
     it("should save user to the database", () => {
       const userDB = new UserDB();

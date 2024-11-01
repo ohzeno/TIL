@@ -1,3 +1,4 @@
+// 세부사항을 숨기고 핵심적인 기능만을 표현
 interface Shape {
   area(): number;
   perimeter(): number;

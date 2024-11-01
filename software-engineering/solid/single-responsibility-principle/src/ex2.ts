@@ -29,6 +29,7 @@ class BookPresenter {
   }
 }
 
+// 표시 기능 분리로, 새로 기능을 추가할 때 crud 기능을 담당하는 Book 클래스는 변경되지 않음.
 class TextBookPresenter {
   book: Book;
 

@@ -1,5 +1,6 @@
 const now = new Date();
 
+// Date의 세부사항은 몰라도 됨
 const year = now.getFullYear();
 const month = now.getMonth() + 1;
 const date = now.getDate();

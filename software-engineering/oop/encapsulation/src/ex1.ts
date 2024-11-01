@@ -1,4 +1,5 @@
 class BankAccount {
+  // 접근 제한으로 외부에서 수정 불가
   #balance: number;
 
   constructor(initialBalance: number) {

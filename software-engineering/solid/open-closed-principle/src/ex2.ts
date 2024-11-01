@@ -24,6 +24,7 @@ class PremiumCustomer implements Customer {
   }
 }
 
+// 새 고객 유형을 추가할 때 Discount, LoyaltyProgram 클래스를 수정할 필요가 없다.
 class GoldCustomer implements Customer {
   giveDiscount(): number {
     return 30;
