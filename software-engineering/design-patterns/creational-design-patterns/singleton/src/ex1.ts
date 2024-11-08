@@ -14,7 +14,7 @@ class Singleton {
   }
 
   public someMethod(): void {
-    console.log("Hello, I am a singleton!");
+    console.log("I am a singleton");
   }
 }
 

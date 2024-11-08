@@ -17,9 +17,9 @@ class Logger {
 }
 
 const logger1 = Logger.getInstance();
-logger1.log("First log message");
+logger1.log("First log");
 
 const logger2 = Logger.getInstance();
-logger2.log("Second log message");
+logger2.log("Second log");
 
 console.log(logger1 === logger2); // true
