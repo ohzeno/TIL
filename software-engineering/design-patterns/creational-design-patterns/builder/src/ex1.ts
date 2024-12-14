@@ -4,6 +4,7 @@ interface Builder {
   setPartC(): void;
 }
 
+// GoF스타일.
 class ConcreteBuilder implements Builder {
   private product!: Product;
 
