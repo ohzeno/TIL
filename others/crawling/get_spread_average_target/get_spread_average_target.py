@@ -121,21 +121,19 @@ def get_code_link(code: str) -> str | None:
         return None
     # html 파싱
     soup = BeautifulSoup(response.content, "html.parser")
-    # 검색결과 테이블 상위 10개
-    rows = soup.select(
+    # 검색결과 테이블 상위 10개 리스트로 반환.
+    tbody = soup.select(
         "#advanced-search__instruments > div.card-content.table-responsive > table > tbody > tr"
     )
     # 검색결과 테이블 순회
-    for row in rows:
+    for tr in tbody:
         # 국기
-        flag_class = row.select_one("td.table-child--c.table-child--left > span > i")[
-            "class"
-        ]
+        flag_class = tr.select_one("td.table-child--left > span > i")['class']
         # 종목코드
-        stock_code = row.select_one("td.table-child--cauto.txt-bold").text.strip()
+        stock_code = tr.select_one("td.txt-bold.table-child--centered").text.strip()
         # 미국 주식이고 종목코드가 일치하면 고유 문자열 반환
         if "flag__us" in flag_class and stock_code == code:
-            href = row.select_one("td.table-child--c.table-child--left > span > a")[
+            href = tr.select_one("td.table-child--left > span > a")[
                 "href"
             ]
             stock_link_str = href.split("/")[3]
@@ -180,6 +178,7 @@ def get_spread_average(code: str) -> str | None:
     if code not in stock_d:
         print(f"{code}에 대한 링크 정보가 없습니다. 정보 수집 시작")
         if not update_link(code, stock_d):
+            print(f"{code}에 대한 링크 정보 수집 실패")
             return None
     while True:
         url = f"{BASE_URL}/quote/stock/{stock_d[code]}/consensus/"
@@ -189,13 +188,14 @@ def get_spread_average(code: str) -> str | None:
         if response.status_code == 302:
             print(f"{code}에 대한 주소가 변경됨. 주소 업데이트 작업 실행.")
             if not update_link(code, stock_d):  # 주소 업데이트 실패하면 종료
+                print(f"{code}에 대한 링크 정보 수집 실패")
                 return None
             continue  # 주소 업데이트 후 다시 시도
         return None  # 200도 302도 아니면 종료
 
     soup = BeautifulSoup(response.text, "html.parser")
     element = soup.select_one(
-        "#consensusdetail > div.card-content > div > div:nth-child(6) > div.c-auto.txt-align-right.txt-bold > span"
+        "#consensus-analysts > div.card-content > div > div:nth-child(6) > div.c-auto.txt-align-right.txt-bold > span"
     )
     if not element:
         print("Spread / Average Element not found")
