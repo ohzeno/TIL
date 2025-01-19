@@ -28,6 +28,7 @@ class Hatchback extends Car {
   }
 }
 
+// 단순 팩토리.
 class CarFactory {
   public createCar(type: string, model: string, productionYear: number): Car {
     switch (type) {
